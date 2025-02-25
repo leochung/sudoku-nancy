@@ -21,39 +21,40 @@ const SudokuBoard: React.FC<Props> = ({
     return row === selRow || col === selCol;
   };
 
+  const getBlockBorder = (row: number, col: number) => {
+    const isRightBorder = (col + 1) % 3 === 0 && col !== 8;
+    const isBottomBorder = (row + 1) % 3 === 0 && row !== 8;
+    
+    return cn(
+      "border border-border/50",
+      isRightBorder && "border-r-2 border-r-primary",
+      isBottomBorder && "border-b-2 border-b-primary"
+    );
+  };
+
   return (
-    <div className="grid grid-cols-3 gap-0 border-2 border-primary rounded-lg overflow-hidden aspect-square max-w-[500px] w-full mx-auto">
-      {[0, 1, 2].map((blockRow) => (
-        <div key={blockRow} className="grid grid-cols-3 aspect-square">
-          {[0, 1, 2].map((blockCol) => (
-            <div key={`${blockRow}-${blockCol}`} className="grid-3x3 grid grid-cols-3 aspect-square">
-              {[0, 1, 2].map((cellRow) => (
-                Array(3).fill(null).map((_, cellCol) => {
-                  const row = blockRow * 3 + cellRow;
-                  const col = blockCol * 3 + cellCol;
-                  const value = puzzle[row][col];
-                  
-                  return (
-                    <button
-                      key={`${row}-${col}`}
-                      onClick={() => onCellClick(row, col)}
-                      className={cn(
-                        "sudoku-cell",
-                        isHighlighted(row, col) && "sudoku-cell-highlight",
-                        fixedNumbers[row][col] && "font-bold",
-                        selectedCell?.[0] === row && selectedCell?.[1] === col && 
-                        "bg-primary/10"
-                      )}
-                      disabled={fixedNumbers[row][col]}
-                    >
-                      {value || ""}
-                    </button>
-                  );
-                })
-              ))}
-            </div>
-          ))}
-        </div>
+    <div className="grid grid-cols-9 border-2 border-primary rounded-lg overflow-hidden aspect-square max-w-[500px] w-full mx-auto">
+      {Array(9).fill(null).map((_, row) => (
+        Array(9).fill(null).map((_, col) => {
+          const value = puzzle[row][col];
+          return (
+            <button
+              key={`${row}-${col}`}
+              onClick={() => onCellClick(row, col)}
+              className={cn(
+                "aspect-square flex items-center justify-center text-lg font-medium",
+                getBlockBorder(row, col),
+                isHighlighted(row, col) && "bg-primary/5",
+                fixedNumbers[row][col] && "font-bold",
+                selectedCell?.[0] === row && selectedCell?.[1] === col && 
+                "bg-primary/10"
+              )}
+              disabled={fixedNumbers[row][col]}
+            >
+              {value || ""}
+            </button>
+          );
+        })
       ))}
     </div>
   );
