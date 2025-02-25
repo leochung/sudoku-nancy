@@ -24,9 +24,9 @@ const SudokuBoard: React.FC<Props> = ({
   return (
     <div className="grid grid-cols-3 gap-0 border-2 border-primary rounded-lg overflow-hidden aspect-square max-w-[500px] w-full mx-auto">
       {[0, 1, 2].map((blockRow) => (
-        <div key={blockRow} className="grid grid-cols-3">
+        <div key={blockRow} className="grid grid-cols-3 aspect-square">
           {[0, 1, 2].map((blockCol) => (
-            <div key={`${blockRow}-${blockCol}`} className="grid-3x3 grid grid-cols-3">
+            <div key={`${blockRow}-${blockCol}`} className="grid-3x3 grid grid-cols-3 aspect-square">
               {[0, 1, 2].map((cellRow) => (
                 Array(3).fill(null).map((_, cellCol) => {
                   const row = blockRow * 3 + cellRow;
