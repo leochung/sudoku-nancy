@@ -8,8 +8,12 @@ import { generatePuzzle } from '@/utils/sudoku';
 import { Github } from 'lucide-react';
 
 const Index = () => {
-  const [puzzle, setPuzzle] = useState<(number | null)[][]>([]);
-  const [fixedNumbers, setFixedNumbers] = useState<boolean[][]>([]);
+  // Initialize with a 9x9 array of nulls
+  const initialPuzzle = Array(9).fill(null).map(() => Array(9).fill(null));
+  const initialFixed = Array(9).fill(null).map(() => Array(9).fill(false));
+
+  const [puzzle, setPuzzle] = useState<(number | null)[][]>(initialPuzzle);
+  const [fixedNumbers, setFixedNumbers] = useState<boolean[][]>(initialFixed);
   const [selectedCell, setSelectedCell] = useState<[number, number] | null>(null);
   const [selectedNumber, setSelectedNumber] = useState<number | null>(null);
   const [difficulty, setDifficulty] = useState('medium');
@@ -17,6 +21,7 @@ const Index = () => {
   const [isPaused, setIsPaused] = useState(false);
   const { theme, setTheme } = useTheme();
 
+  // Generate puzzle immediately on mount
   useEffect(() => {
     const [newPuzzle, newFixed] = generatePuzzle(difficulty);
     setPuzzle(newPuzzle);
