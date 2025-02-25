@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Sun, Moon, Timer, RefreshCw } from "lucide-react";
+import { Sun, Moon, Timer, RefreshCw, Pause, Play } from "lucide-react";
 
 interface Props {
   difficulty: string;
@@ -55,6 +55,10 @@ const GameControls: React.FC<Props> = ({
           <Timer className="h-4 w-4" />
           <span className="font-medium">{formatTime(time)}</span>
         </div>
+
+        <Button variant="outline" size="icon" onClick={onPauseToggle}>
+          {isPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+        </Button>
 
         <Button variant="outline" size="icon" onClick={onNewGame}>
           <RefreshCw className="h-4 w-4" />

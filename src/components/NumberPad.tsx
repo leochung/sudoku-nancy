@@ -26,7 +26,7 @@ const NumberPad: React.FC<Props> = ({ onNumberClick, onErase, selectedNumber }) 
       ))}
       <button
         onClick={onErase}
-        className="number-button bg-destructive/10 text-destructive hover:bg-destructive/20"
+        className="number-button bg-destructive text-destructive-foreground hover:bg-destructive/90"
       >
         ✕
       </button>
