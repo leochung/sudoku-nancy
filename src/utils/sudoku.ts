@@ -1,14 +1,13 @@
 
 // Function to generate a valid Sudoku puzzle
 export const generatePuzzle = (difficulty: string): [number[][], boolean[][]] => {
-  // For this demo, we'll use a simple preset puzzle
-  // In a real implementation, you'd want to generate random valid puzzles
+  // Create an empty puzzle
   const puzzle = Array(9).fill(null).map(() => Array(9).fill(null));
   const fixed = Array(9).fill(null).map(() => Array(9).fill(false));
   
   // Number of cells to reveal based on difficulty
   const cellsToReveal = {
-    easy: 40,
+    easy: 38,
     medium: 30,
     hard: 25,
   }[difficulty];
@@ -24,17 +23,8 @@ export const generatePuzzle = (difficulty: string): [number[][], boolean[][]] =>
   // Create a copy of the solved puzzle
   const solution = puzzle.map(row => [...row]);
 
-  // Remove numbers based on difficulty
-  let cellsToHide = 81 - cellsToReveal;
-  while (cellsToHide > 0) {
-    const row = Math.floor(Math.random() * 9);
-    const col = Math.floor(Math.random() * 9);
-    if (puzzle[row][col] !== null) {
-      puzzle[row][col] = null;
-      fixed[row][col] = false;
-      cellsToHide--;
-    }
-  }
+  // Remove numbers based on difficulty using a strategy that ensures uniqueness
+  removeNumbersWithUniqueSolution(puzzle, 81 - cellsToReveal);
 
   // Mark remaining numbers as fixed
   for (let i = 0; i < 9; i++) {
@@ -110,4 +100,79 @@ const solveSudoku = (puzzle: number[][]): boolean => {
   }
 
   return false;
+};
+
+// Count the number of solutions for a given puzzle
+const countSolutions = (puzzle: number[][]): number => {
+  // Make a copy of the puzzle to avoid modifying the original
+  const puzzleCopy = puzzle.map(row => [...row]);
+  let count = 0;
+  
+  // Find an empty cell
+  let row = -1, col = -1;
+  for (let i = 0; i < 9 && row === -1; i++) {
+    for (let j = 0; j < 9; j++) {
+      if (puzzleCopy[i][j] === null) {
+        row = i;
+        col = j;
+        break;
+      }
+    }
+  }
+  
+  // If no empty cell found, we have a solution
+  if (row === -1) return 1;
+  
+  // Try each number in the empty cell
+  for (let num = 1; num <= 9; num++) {
+    if (isValid(puzzleCopy, row, col, num)) {
+      puzzleCopy[row][col] = num;
+      count += countSolutions(puzzleCopy);
+      // If we've found more than one solution, no need to continue
+      if (count > 1) return count;
+      puzzleCopy[row][col] = null;
+    }
+  }
+  
+  return count;
+};
+
+// Remove numbers while ensuring a unique solution
+const removeNumbersWithUniqueSolution = (puzzle: number[][], cellsToRemove: number) => {
+  const cells: [number, number][] = [];
+  
+  // Create a list of all cells with numbers
+  for (let i = 0; i < 9; i++) {
+    for (let j = 0; j < 9; j++) {
+      cells.push([i, j]);
+    }
+  }
+  
+  // Shuffle the cells to ensure random removal
+  shuffleArray(cells);
+  
+  // Try to remove numbers while maintaining a unique solution
+  for (let i = 0; i < cells.length && cellsToRemove > 0; i++) {
+    const [row, col] = cells[i];
+    const temp = puzzle[row][col];
+    puzzle[row][col] = null;
+    
+    // Count the number of solutions
+    const numSolutions = countSolutions(puzzle);
+    
+    // If there are multiple solutions, put the number back
+    if (numSolutions !== 1) {
+      puzzle[row][col] = temp;
+    } else {
+      cellsToRemove--;
+    }
+  }
+};
+
+// Fisher-Yates shuffle algorithm
+const shuffleArray = <T>(array: T[]) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
 };
