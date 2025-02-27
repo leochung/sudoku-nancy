@@ -6,6 +6,7 @@ import NumberPad from '@/components/NumberPad';
 import GameControls from '@/components/GameControls';
 import { generatePuzzle } from '@/utils/sudoku';
 import { Github } from 'lucide-react';
+import { toast } from 'sonner';
 
 const Index = () => {
   // Initialize with a 9x9 array of nulls
@@ -19,6 +20,7 @@ const Index = () => {
   const [difficulty, setDifficulty] = useState('medium');
   const [time, setTime] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [isSolved, setIsSolved] = useState(false);
   const { theme, setTheme } = useTheme();
 
   // Generate puzzle immediately on mount
@@ -30,17 +32,18 @@ const Index = () => {
     setSelectedNumber(null);
     setTime(0);
     setIsPaused(false);
+    setIsSolved(false);
   }, [difficulty]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
-    if (!isPaused) {
+    if (!isPaused && !isSolved) {
       interval = setInterval(() => {
         setTime((prev) => prev + 1);
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [isPaused]);
+  }, [isPaused, isSolved]);
 
   const handleCellClick = (row: number, col: number) => {
     if (!fixedNumbers[row][col]) {
@@ -57,6 +60,9 @@ const Index = () => {
         newPuzzle[row][col] = number;
         setPuzzle(newPuzzle);
         setSelectedNumber(number);
+        
+        // Check if the puzzle is solved after updating
+        checkIfPuzzleIsSolved(newPuzzle);
       }
     }
   };
@@ -81,6 +87,64 @@ const Index = () => {
     setSelectedNumber(null);
     setTime(0);
     setIsPaused(false);
+    setIsSolved(false);
+  };
+
+  const checkIfPuzzleIsSolved = (currentPuzzle: (number | null)[][]) => {
+    // Check if there are any empty cells
+    for (let i = 0; i < 9; i++) {
+      for (let j = 0; j < 9; j++) {
+        if (currentPuzzle[i][j] === null) {
+          return false;
+        }
+      }
+    }
+
+    // Check rows
+    for (let row = 0; row < 9; row++) {
+      const seen = new Set();
+      for (let col = 0; col < 9; col++) {
+        seen.add(currentPuzzle[row][col]);
+      }
+      if (seen.size !== 9) return false;
+    }
+
+    // Check columns
+    for (let col = 0; col < 9; col++) {
+      const seen = new Set();
+      for (let row = 0; row < 9; row++) {
+        seen.add(currentPuzzle[row][col]);
+      }
+      if (seen.size !== 9) return false;
+    }
+
+    // Check 3x3 boxes
+    for (let boxRow = 0; boxRow < 3; boxRow++) {
+      for (let boxCol = 0; boxCol < 3; boxCol++) {
+        const seen = new Set();
+        for (let i = 0; i < 3; i++) {
+          for (let j = 0; j < 3; j++) {
+            seen.add(currentPuzzle[boxRow * 3 + i][boxCol * 3 + j]);
+          }
+        }
+        if (seen.size !== 9) return false;
+      }
+    }
+
+    // If we get here, the puzzle is solved
+    setIsSolved(true);
+    
+    // Display a congratulations message
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    const timeString = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    
+    toast.success("Congratulations!", {
+      description: `You solved the ${difficulty} puzzle in ${timeString}!`,
+      duration: 5000,
+    });
+    
+    return true;
   };
 
   return (
