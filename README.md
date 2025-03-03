@@ -6,7 +6,7 @@ This project is made for my sister Nancy - she loved sudoku game but most of the
 
 ## Technologies are used for this project
 
-This project is built with Lovable leveragin the technologies below:
+This project is built with Lovable leveraging the technologies below:
 
 - Vite
 - TypeScript
