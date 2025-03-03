@@ -6,13 +6,15 @@ This project is maade for my sister Nancy. She loved sudoku game but most of the
 
 ## Technologies are used for this project
 
-This project is built with .
+This project is built with Lovable leveragin the technologies below:
 
 - Vite
 - TypeScript
 - React
 - shadcn-ui
 - Tailwind CSS
+
+You are free to use any IDE tool to modify the code and deploy it.
 
 ## Contacts
 
