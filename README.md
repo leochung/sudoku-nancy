@@ -16,6 +16,10 @@ This project is built with Lovable leveragin the technologies below:
 
 You are free to use any IDE tool to modify the code and deploy it.
 
+## License
+
+This project is released under MIT license. Plesae check LICENSE.txt for further information.
+
 ## Contacts
 
 Any questions please drop me en email.
