@@ -2,7 +2,7 @@
 
 ## Project info
 
-This project is maade for my sister Nancy. She loved sudoku game but most of the games available online are full of ads. Therefore, I made one for her.
+This project is made for my sister Nancy - she loved sudoku game but most of the games available online are full of ads. Therefore, I made one for her.
 
 ## Technologies are used for this project
 
