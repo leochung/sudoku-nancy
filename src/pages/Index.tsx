@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import SudokuBoard from '@/components/SudokuBoard';
@@ -194,24 +193,6 @@ const Index = () => {
             Leo Chung
           </a>
         </p>
-        <div className="flex items-center justify-center gap-4">
-          <a
-            href="https://twitter.com/leo_chung"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="footer-link text-sm"
-          >
-            Follow on Twitter
-          </a>
-          <a
-            href="https://github.com/sponsors/leochung"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="footer-link text-sm"
-          >
-            Support my work
-          </a>
-        </div>
       </footer>
     </div>
   );
